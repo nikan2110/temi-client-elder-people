@@ -1,0 +1,64 @@
+<!-- activity_add_activity.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/editTextActivityTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Title" />
+
+    <EditText
+        android:id="@+id/editTextActivityDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Description" />
+
+    <TimePicker
+        android:id="@+id/timePickerActivityTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:timePickerMode="spinner"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Пример CheckBox для дней недели -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="7">
+
+            <CheckBox
+                android:id="@+id/checkboxMonday"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Monday"/>
+
+            <CheckBox
+                android:id="@+id/checkboxThursday"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Thursday"/>
+
+        </LinearLayout>
+
+
+</LinearLayout>
+
+    <Button
+        android:id="@+id/buttonSaveActivity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save Activity" />
+
+</LinearLayout>
