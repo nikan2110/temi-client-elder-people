@@ -61,8 +61,12 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this,
                             "User create successfully",
                             Toast.LENGTH_SHORT).show();
+
                     String userId = userDTO.getIdentityNumber();
+                    String userName = userDTO.getName();
+
                     sharedPreferencesManager.saveUserId(userId);
+                    sharedPreferencesManager.saveUserName(userName);
 
                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                     finish();

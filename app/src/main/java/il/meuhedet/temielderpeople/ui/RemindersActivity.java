@@ -40,14 +40,16 @@ import retrofit2.Retrofit;
 public class RemindersActivity extends AppCompatActivity {
 
     private LinearLayout activitiesContainer;
-
     Retrofit retrofit = RetrofitClientTemiServer.getClient();
     ActivityController activityController = retrofit.create(ActivityController.class);
+    SharedPreferencesManager sharedPreferencesManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminders);
+
+        sharedPreferencesManager = new SharedPreferencesManager(this);
 
         activitiesContainer = findViewById(R.id.activitiesContainer);
 
@@ -57,7 +59,6 @@ public class RemindersActivity extends AppCompatActivity {
             startActivity(new Intent(RemindersActivity.this, AddActivityActivity.class));
         });
 
-        SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(this);
         String userId = sharedPreferencesManager.getUserId();
         loadActivities(userId);
 
@@ -104,7 +105,7 @@ public class RemindersActivity extends AppCompatActivity {
 
     private void scheduleAlarm(AlarmManager alarmManager, Context context, ActivityDTO activity) {
         Intent intent = new Intent(context, ReminderBroadcastReceiver.class);
-        intent.putExtra("ID", activity.getId());
+        intent.putExtra("USER_NAME", sharedPreferencesManager.getUserName());
         intent.putExtra("TITLE", activity.getTitle());
         intent.putExtra("DESCRIPTION", activity.getDescription());
 

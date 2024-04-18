@@ -13,10 +13,6 @@ public class LoginActivityOrRegister extends AppCompatActivity {
 //    private AppDatabase db;
 //    private ExecutorService databaseExecutor;
 
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,8 +30,6 @@ public class LoginActivityOrRegister extends AppCompatActivity {
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivity(loginIntent);
         });
-
-
 
 
 //        db = AppDatabase.getDatabase(this);
