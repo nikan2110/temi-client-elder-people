@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
@@ -18,6 +18,9 @@
         android:theme="@style/Theme.TemiElderPeople"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.VideoActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.AddActivityActivity"
             android:exported="false" />
@@ -43,9 +46,6 @@
         </activity>
 
         <receiver android:name=".utils.ReminderBroadcastReceiver" />
-
     </application>
-
-
 
 </manifest>

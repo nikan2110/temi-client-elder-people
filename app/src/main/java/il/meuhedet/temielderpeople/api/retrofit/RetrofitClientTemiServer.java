@@ -20,7 +20,7 @@ public class RetrofitClientTemiServer {
 
         if (retrofit==null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl("http://192.168.217.110:8000/temi/")
+                    .baseUrl("http://10.100.102.128:8000/temi/")
                     .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();

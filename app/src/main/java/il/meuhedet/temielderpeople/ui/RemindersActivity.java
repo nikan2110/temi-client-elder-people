@@ -69,7 +69,6 @@ public class RemindersActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call<List<ActivityDTO>> call, Response<List<ActivityDTO>> response) {
-                Log.i("response code", String.valueOf(response.code()));
                 if (response.code() == 200) {
                     List<ActivityDTO> activities = response.body();
                     if (activities != null && !activities.isEmpty()) {
@@ -112,8 +111,10 @@ public class RemindersActivity extends AppCompatActivity {
         // Перебор всех дней недели из DTO и установка отдельного будильника на каждый
         for (DayOfWeek day : activity.getDays()) {
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                    activity.getId().intValue() + day.getValue(), intent,
+                    activity.getId().intValue() * 100 + day.getValue(), intent,
                     PendingIntent.FLAG_UPDATE_CURRENT);
+
+
 
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.HOUR_OF_DAY, LocalTime.parse(activity.getTime()).getHour());
@@ -123,8 +124,11 @@ public class RemindersActivity extends AppCompatActivity {
 
             // Если время уже прошло на этой неделе, планируем на следующую
             if (calendar.before(Calendar.getInstance())) {
-                calendar.add(Calendar.DAY_OF_YEAR, 7);
+                calendar.add(Calendar.WEEK_OF_YEAR, 1);
             }
+
+            Log.i("AlarmSet", "Setting alarm for ID: "
+                    + activity.getId().intValue() * 100 + day.getValue() + " at " + calendar.getTime());
 
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         }
