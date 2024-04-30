@@ -44,6 +44,10 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver implements Robo
                     " Time to eat your breakfast"));
         }
 
+        if (title.equals("drugs_activity")) {
+            // TODO
+        }
+
         if (title.equals("call_activity")) {
             robot.addTtsListener(this);
             Log.i("titleActivity", "start call activity");
