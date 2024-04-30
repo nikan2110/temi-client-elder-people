@@ -88,7 +88,6 @@ public class AddActivityActivity extends AppCompatActivity {
     }
 
     private void sendDataToServer(ActivityDTO newActivityDTO) {
-        Log.i("activity dto", newActivityDTO.toString());
         String userId = sharedPreferencesManager.getUserId();
         Log.i("userId", userId);
         activityController.createActivity(newActivityDTO, userId).enqueue(new Callback<ActivityDTO>() {
