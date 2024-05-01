@@ -1,13 +1,17 @@
 package il.meuhedet.temielderpeople.utils;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.util.Log;
+import android.view.WindowManager;
+import android.widget.Toast;
 
 import il.meuhedet.temielderpeople.R;
 import il.meuhedet.temielderpeople.api.services.NewsService;
+import il.meuhedet.temielderpeople.ui.MedicationListActivity;
 import il.meuhedet.temielderpeople.ui.VideoActivity;
 
 public class ReminderBroadcastReceiver extends BroadcastReceiver {
@@ -34,5 +38,11 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
             newsService.getTopFiveNewsByTheme("Israel");
         }
 
+        if (title.equals("drugs_activity")) {
+            Intent medicalListIntent = new Intent(context, MedicationListActivity.class);
+            medicalListIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            medicalListIntent.putExtra("MEDICATIONS", new String[]{"Aspirin", "Ibuprofen"});
+            context.startActivity(medicalListIntent);
+        }
     }
 }

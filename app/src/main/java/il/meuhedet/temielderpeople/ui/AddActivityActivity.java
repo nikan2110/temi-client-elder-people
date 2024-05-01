@@ -89,10 +89,12 @@ public class AddActivityActivity extends AppCompatActivity {
 
     private void sendDataToServer(ActivityDTO newActivityDTO) {
         String userId = sharedPreferencesManager.getUserId();
+        Log.i("userId", userId);
         activityController.createActivity(newActivityDTO, userId).enqueue(new Callback<ActivityDTO>() {
 
             @Override
             public void onResponse(Call<ActivityDTO> call, Response<ActivityDTO> response) {
+                Log.i("responseCode", String.valueOf(response.code()));
                 if (response.code() == 200) {
                     ActivityDTO activityDTO = response.body();
                     if (activityDTO != null) {

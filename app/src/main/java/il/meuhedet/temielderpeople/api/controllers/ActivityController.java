@@ -16,7 +16,7 @@ import retrofit2.http.Query;
 
 public interface ActivityController {
 
-    @POST("activities")
+    @POST("activities/activity")
     Call<ActivityDTO> createActivity(@Body ActivityDTO userRegistrationDTO,
                                      @Query("user_id") String userId);
 

@@ -13,11 +13,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -26,9 +22,7 @@ import java.util.List;
 
 import il.meuhedet.temielderpeople.R;
 import il.meuhedet.temielderpeople.api.controllers.ActivityController;
-import il.meuhedet.temielderpeople.api.controllers.UserController;
 import il.meuhedet.temielderpeople.api.dto.ActivityDTO;
-import il.meuhedet.temielderpeople.api.dto.UserRegistrationDTO;
 import il.meuhedet.temielderpeople.api.retrofit.RetrofitClientTemiServer;
 import il.meuhedet.temielderpeople.utils.ReminderBroadcastReceiver;
 import il.meuhedet.temielderpeople.utils.SharedPreferencesManager;
@@ -54,9 +48,16 @@ public class RemindersActivity extends AppCompatActivity {
         activitiesContainer = findViewById(R.id.activitiesContainer);
 
         Button buttonAddActivity = findViewById(R.id.buttonAddActivity);
+        Button buttonBackToLogin = findViewById(R.id.buttonBackToLogin);
 
         buttonAddActivity.setOnClickListener(v -> {
             startActivity(new Intent(RemindersActivity.this, AddActivityActivity.class));
+        });
+
+        buttonBackToLogin.setOnClickListener(v -> {
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Очищаем стек активностей
+            startActivity(intent);
         });
 
         String userId = sharedPreferencesManager.getUserId();
