@@ -41,7 +41,6 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
         if (title.equals("drugs_activity")) {
             Intent medicalListIntent = new Intent(context, MedicationListActivity.class);
             medicalListIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            medicalListIntent.putExtra("MEDICATIONS", new String[]{"Aspirin", "Ibuprofen"});
             context.startActivity(medicalListIntent);
         }
     }
