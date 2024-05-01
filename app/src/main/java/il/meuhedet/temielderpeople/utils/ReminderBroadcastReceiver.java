@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import com.robotemi.sdk.Robot;
 import com.robotemi.sdk.TtsRequest;
 import il.meuhedet.temielderpeople.api.services.NewsService;
+import il.meuhedet.temielderpeople.ui.MedicationListActivity;
 import il.meuhedet.temielderpeople.ui.VideoActivity;
 
 public class ReminderBroadcastReceiver extends BroadcastReceiver implements Robot.TtsListener {
@@ -45,7 +46,9 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver implements Robo
         }
 
         if (title.equals("drugs_activity")) {
-            // TODO
+            Intent medicalListIntent = new Intent(context, MedicationListActivity.class);
+            medicalListIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(medicalListIntent);
         }
 
         if (title.equals("call_activity")) {
