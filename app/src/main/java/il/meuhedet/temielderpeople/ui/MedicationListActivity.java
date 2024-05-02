@@ -4,9 +4,12 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
+
+import com.robotemi.sdk.Robot;
+import com.robotemi.sdk.TtsRequest;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -16,6 +19,8 @@ public class MedicationListActivity extends AppCompatActivity {
 
     private ArrayList<String> medications;
     private ArrayAdapter<String> adapter;
+
+    private Robot robot = Robot.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +41,12 @@ public class MedicationListActivity extends AppCompatActivity {
             askMedicationConfirmation(medications.get(position));
         });
 
-        Toast.makeText(this, "Please check your medication list and confirm each as you take them.", Toast.LENGTH_LONG).show();
+        robot.speak(TtsRequest.create("Please check your medication list " +
+                "and confirm each as you take them."));
     }
 
     private void askMedicationConfirmation(String medication) {
+        robot.speak(TtsRequest.create("Did you take your" + medication + " ?"));
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Confirm Medication");
         builder.setMessage("Did you take your " + medication + "?");
@@ -47,11 +54,11 @@ public class MedicationListActivity extends AppCompatActivity {
         builder.setPositiveButton("Yes", (dialog, which) -> {
             medications.remove(medication);
             adapter.notifyDataSetChanged();
-            Toast.makeText(this, "Great, I've noted that you took your " + medication + ".", Toast.LENGTH_LONG).show();
+            robot.speak(TtsRequest.create("Great, I've noted that you took your " + medication + "."));
         });
 
         builder.setNegativeButton("No", (dialog, which) -> {
-            Toast.makeText(this, "Please remember to take your \" + medication + \".", Toast.LENGTH_LONG).show();
+            robot.speak(TtsRequest.create("Please remember to take your " + medication + "."));
         });
 
         builder.create().show();
