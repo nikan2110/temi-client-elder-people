@@ -46,7 +46,7 @@ public class MedicationListActivity extends AppCompatActivity {
     }
 
     private void askMedicationConfirmation(String medication) {
-        robot.speak(TtsRequest.create("Did you take your" + medication + " ?"));
+        robot.speak(TtsRequest.create("Did you take your " + medication + " ?"));
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Confirm Medication");
         builder.setMessage("Did you take your " + medication + "?");

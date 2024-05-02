@@ -54,9 +54,16 @@ public class RemindersActivity extends AppCompatActivity {
         activitiesContainer = findViewById(R.id.activitiesContainer);
 
         Button buttonAddActivity = findViewById(R.id.buttonAddActivity);
+        Button buttonBackToLogin = findViewById(R.id.buttonBackToLogin);
 
         buttonAddActivity.setOnClickListener(v -> {
             startActivity(new Intent(RemindersActivity.this, AddActivityActivity.class));
+        });
+
+        buttonBackToLogin.setOnClickListener(v -> {
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Очищаем стек активностей
+            startActivity(intent);
         });
 
         String userId = sharedPreferencesManager.getUserId();

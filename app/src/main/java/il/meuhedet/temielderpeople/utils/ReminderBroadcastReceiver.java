@@ -41,11 +41,13 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver implements Robo
         }
 
         if (title.equals("breakfast_activity")) {
+            Log.i("titleActivity", "start breakfast activity");
             robot.speak(TtsRequest.create("Hello, " + userName +  "." +
                     " Time to eat your breakfast"));
         }
 
         if (title.equals("drugs_activity")) {
+            Log.i("titleActivity", "start drugs activity");
             Intent medicalListIntent = new Intent(context, MedicationListActivity.class);
             medicalListIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(medicalListIntent);
@@ -68,7 +70,6 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver implements Robo
 
     @Override
     public void onTtsStatusChanged(@NonNull TtsRequest ttsRequest) {
-        Log.i("ttsStatusChangedBroadcastReceiver", ttsRequest.getStatus().toString());
         if (ttsRequest.getStatus() == TtsRequest.Status.COMPLETED) {
             if (ttsRequest.getSpeech().equals("Time to start physical activity")) {
                 robot.removeTtsListener(this);
