@@ -32,7 +32,7 @@ public class MedicationListActivity extends AppCompatActivity {
 
         closeButton.setOnClickListener(v -> finish());
 
-        medications = new ArrayList<>(Arrays.asList("Aspirin", "Ibuprofen", "Paracetamol"));
+        medications = new ArrayList<>(Arrays.asList("אספירין", "איבורפן", "אקמול"));
         ListView listView = findViewById(R.id.listViewMedications);
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, medications);
         listView.setAdapter(adapter);
@@ -41,24 +41,23 @@ public class MedicationListActivity extends AppCompatActivity {
             askMedicationConfirmation(medications.get(position));
         });
 
-        robot.speak(TtsRequest.create("Please check your medication list " +
-                "and confirm each as you take them."));
+        robot.speak(TtsRequest.create("הנה רשימת התרופות שלך לקחת הבוקר"));
     }
 
     private void askMedicationConfirmation(String medication) {
-        robot.speak(TtsRequest.create("Did you take your " + medication + " ?"));
+        robot.speak(TtsRequest.create("האם לקחת את ה" + medication + " ?"));
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Confirm Medication");
-        builder.setMessage("Did you take your " + medication + "?");
+        builder.setMessage("האם לקחת את ה" + medication + "?");
 
-        builder.setPositiveButton("Yes", (dialog, which) -> {
+        builder.setPositiveButton("כן לקחתי", (dialog, which) -> {
             medications.remove(medication);
             adapter.notifyDataSetChanged();
-            robot.speak(TtsRequest.create("Great, I've noted that you took your " + medication + "."));
+            robot.speak(TtsRequest.create("מצויין, עדכנתי את האחות שלקחת את התרופה " + medication + "."));
         });
 
-        builder.setNegativeButton("No", (dialog, which) -> {
-            robot.speak(TtsRequest.create("Please remember to take your " + medication + "."));
+        builder.setNegativeButton("לא", (dialog, which) -> {
+            robot.speak(TtsRequest.create("אני אזכיר לך שוב בעוד חצי שעה לקחת " + medication + "."));
         });
 
         builder.create().show();

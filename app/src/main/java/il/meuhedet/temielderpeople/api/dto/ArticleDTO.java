@@ -1,21 +1,14 @@
 package il.meuhedet.temielderpeople.api.dto;
 
-import lombok.Getter;
-import lombok.ToString;
-
 public class ArticleDTO {
 
-	String author;
 	String title;
 	String description;
-	String url;
-	String urlToImage;
-	String publishedAt;
 	String content;
+	String url;
+	String image;
+	String publishedAt;
 
-	public String getAuthor() {
-		return author;
-	}
 
 	public String getTitle() {
 		return title;
@@ -29,8 +22,8 @@ public class ArticleDTO {
 		return url;
 	}
 
-	public String getUrlToImage() {
-		return urlToImage;
+	public String getImage() {
+		return image;
 	}
 
 	public String getPublishedAt() {
@@ -44,11 +37,10 @@ public class ArticleDTO {
 	@Override
 	public String toString() {
 		return "ArticleDTO{" +
-				"author='" + author + '\'' +
 				", title='" + title + '\'' +
 				", description='" + description + '\'' +
 				", url='" + url + '\'' +
-				", urlToImage='" + urlToImage + '\'' +
+				", urlToImage='" + image + '\'' +
 				", publishedAt='" + publishedAt + '\'' +
 				", content='" + content + '\'' +
 				'}';
