@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
 }
 
+
 android {
     namespace 'il.meuhedet.temielderpeople'
     compileSdk 34
@@ -30,6 +31,7 @@ android {
         viewBinding true
     }
 }
+
 
 dependencies {
 
@@ -69,5 +71,8 @@ dependencies {
 
     // Temi
     implementation 'com.robotemi:sdk:1.130.4'
+
+    // Video Streaming
+    implementation 'com.github.pedroSG94:rtmp-rtsp-stream-client-java:1.9.8'
 
 }
