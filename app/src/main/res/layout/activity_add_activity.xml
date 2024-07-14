@@ -37,6 +37,13 @@
             android:weightSum="7">
 
             <CheckBox
+                android:id="@+id/checkboxSunday"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Sunday"/>
+
+            <CheckBox
                 android:id="@+id/checkboxMonday"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -44,11 +51,39 @@
                 android:text="Monday"/>
 
             <CheckBox
+                android:id="@+id/checkboxTuesday"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Tuesday"/>
+
+            <CheckBox
+                android:id="@+id/checkboxWednesday"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Wednesday"/>
+
+            <CheckBox
                 android:id="@+id/checkboxThursday"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Thursday"/>
+
+            <CheckBox
+                android:id="@+id/checkboxFriday"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Friday"/>
+
+            <CheckBox
+                android:id="@+id/checkboxSaturday"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Saturday"/>
 
         </LinearLayout>
 
@@ -60,5 +95,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Save Activity" />
+
+    <Button
+        android:id="@+id/buttonExitFromAddActivity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Exit without saving" />
 
 </LinearLayout>

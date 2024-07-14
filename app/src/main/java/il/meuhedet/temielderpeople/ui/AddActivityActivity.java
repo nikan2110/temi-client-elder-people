@@ -54,14 +54,23 @@ public class AddActivityActivity extends AppCompatActivity {
 
         // Инициализация чекбоксов дней недели
         dayCheckboxes = new HashMap<>();
+        dayCheckboxes.put(DayOfWeek.SUNDAY, findViewById(R.id.checkboxSunday));
         dayCheckboxes.put(DayOfWeek.MONDAY, findViewById(R.id.checkboxMonday));
+        dayCheckboxes.put(DayOfWeek.TUESDAY, findViewById(R.id.checkboxTuesday));
+        dayCheckboxes.put(DayOfWeek.WEDNESDAY, findViewById(R.id.checkboxWednesday));
         dayCheckboxes.put(DayOfWeek.THURSDAY, findViewById(R.id.checkboxThursday));
-
-
+        dayCheckboxes.put(DayOfWeek.FRIDAY, findViewById(R.id.checkboxFriday));
+        dayCheckboxes.put(DayOfWeek.SATURDAY, findViewById(R.id.checkboxSaturday));
 
         Button buttonSaveActivity = findViewById(R.id.buttonSaveActivity);
         buttonSaveActivity.setOnClickListener(v -> {
             saveActivity();
+        });
+
+        Button buttonExitFromActivity = findViewById(R.id.buttonExitFromAddActivity);
+        buttonExitFromActivity.setOnClickListener(v -> {
+            Intent reminderIntent = new Intent(this, RemindersActivity.class);
+            startActivity(reminderIntent);
         });
 
     }
@@ -88,7 +97,8 @@ public class AddActivityActivity extends AppCompatActivity {
     }
 
     private void sendDataToServer(ActivityDTO newActivityDTO) {
-        String userId = sharedPreferencesManager.getUserId();
+//        String userId = sharedPreferencesManager.getUserId();
+        String userId = "346412612";
         Log.i("userId", userId);
         activityController.createActivity(newActivityDTO, userId).enqueue(new Callback<ActivityDTO>() {
 

@@ -17,6 +17,9 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.ByteBuffer;
@@ -34,7 +37,7 @@ public class CameraService {
     private Socket socket;
     private String serverAddress = "192.168.12.110"; // IP адрес сервера
     private int serverPort = 5999; // Порт сервера
-
+//    private FileOutputStream videoOutputStream;
     private volatile boolean encodingActive;  // Флаг активности потока кодирования
 
     public CameraService(Context context) {
@@ -58,6 +61,7 @@ public class CameraService {
                         REQUEST_CAMERA_PERMISSION);
                 return;
             }
+//            setupFileOutput();
             manager.openCamera(cameraId, new CameraDevice.StateCallback() {
                 @Override
                 public void onOpened(CameraDevice camera) {
@@ -97,6 +101,7 @@ public class CameraService {
             mediaCodec.start();
 
             startCameraCaptureSession();
+
 
 
         } catch (IOException e) {
@@ -206,6 +211,12 @@ public class CameraService {
             }
             socket.getOutputStream().write(data);
             socket.getOutputStream().flush();
+
+            // Also write to video file
+//            if (videoOutputStream != null) {
+//                videoOutputStream.write(data);
+//                videoOutputStream.flush();
+//            }
         } catch (IOException e) {
             Log.e(TAG, "Error sending data: " + e.getMessage());
             try {
@@ -213,9 +224,24 @@ public class CameraService {
                     socket.close();
                     socket = null;
                 }
+
+//                if (videoOutputStream != null) {
+//                    videoOutputStream.close();
+//                    videoOutputStream = null;
+//                }
+
             } catch (IOException ex) {
                 Log.e(TAG, "Error closing socket: " + ex.getMessage());
             }
         }
     }
+
+//    public void setupFileOutput() {
+//        File videoFile = new File(context.getExternalFilesDir(null), "video_stream.h264");
+//        try {
+//            videoOutputStream = new FileOutputStream(videoFile);
+//        } catch (FileNotFoundException e) {
+//            Log.e(TAG, "File not found for video output", e);
+//        }
+//    }
 }
