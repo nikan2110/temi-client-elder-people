@@ -40,13 +40,16 @@ import il.meuhedet.temielderpeople.api.retrofit.RetrofitClientChatGPTServer;
 import il.meuhedet.temielderpeople.api.retrofit.RetrofitClientTemiServer;
 import il.meuhedet.temielderpeople.utils.ReminderBroadcastReceiver;
 import il.meuhedet.temielderpeople.utils.SharedPreferencesManager;
+import il.meuhedet.temielderpeople.utils.TtsManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class RemindersActivity extends AppCompatActivity
-        implements OnRobotReadyListener, Robot.AsrListener, Robot.TtsListener {
+        implements OnRobotReadyListener,
+        Robot.AsrListener,
+        Robot.WakeupWordListener {
 
     private LinearLayout activitiesContainer;
     Retrofit retrofitTemiServer = RetrofitClientTemiServer.getClient();
@@ -54,12 +57,15 @@ public class RemindersActivity extends AppCompatActivity
     ActivityController activityController = retrofitTemiServer.create(ActivityController.class);
     ChatGPTController chatGPTController = retrofitChatGPT.create(ChatGPTController.class);
     SharedPreferencesManager sharedPreferencesManager;
-    Robot robot;
+    private TtsManager ttsManager;
+    private Robot robot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminders);
+
+        ttsManager = TtsManager.getInstance(this);
 
         robot = Robot.getInstance();
 
@@ -82,7 +88,8 @@ public class RemindersActivity extends AppCompatActivity
 //        });
 
         buttonTemiInteraction.setOnClickListener(v -> {
-            robot.askQuestion("Start GPT mode. Ask your question.");
+            ttsManager.speak(TtsRequest.create("Start GPT mode. Ask your question."),
+                    true);
         });
 
 
@@ -221,14 +228,6 @@ public class RemindersActivity extends AppCompatActivity
     }
 
     @Override
-    public void onTtsStatusChanged(@NonNull TtsRequest ttsRequest) {
-        Log.i("tts status", ttsRequest.getStatus().toString());
-        if (ttsRequest.getStatus() == TtsRequest.Status.COMPLETED) {
-            robot.wakeup();
-        }
-    }
-
-    @Override
     public void onRobotReady(boolean isReady) {
         if (isReady) {
             try {
@@ -244,7 +243,7 @@ public class RemindersActivity extends AppCompatActivity
         super.onStart();
         robot.addOnRobotReadyListener(this);
         robot.addAsrListener(this);
-        robot.addTtsListener(this);
+        robot.addWakeupWordListener(this);
     }
 
     @Override
@@ -252,7 +251,7 @@ public class RemindersActivity extends AppCompatActivity
         super.onStop();
         robot.removeOnRobotReadyListener(this);
         robot.removeAsrListener(this);
-        robot.removeTtsListener(this);
+        robot.removeWakeupWordListener(this);
     }
 
 
@@ -264,7 +263,8 @@ public class RemindersActivity extends AppCompatActivity
                 ChatGPTAnswerDTO chatGPTAnswerModel = response.body();
                 if (chatGPTAnswerModel != null && !chatGPTAnswerModel.getResponse().isEmpty()) {
                     String chatGPTAnswerModelText = chatGPTAnswerModel.getResponse();
-                    robot.speak(TtsRequest.create(chatGPTAnswerModelText, true));
+                    ttsManager.speak(TtsRequest.create(chatGPTAnswerModelText,
+                            true), true);
                 }
             }
 
@@ -274,5 +274,10 @@ public class RemindersActivity extends AppCompatActivity
                         "Something wrong with server", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onWakeupWord(@NonNull String s, int i) {
+        ttsManager.speak(TtsRequest.create(""), true);
     }
 }
