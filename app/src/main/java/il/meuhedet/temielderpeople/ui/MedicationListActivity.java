@@ -1,6 +1,11 @@
 package il.meuhedet.temielderpeople.ui;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -13,8 +18,10 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 
 import il.meuhedet.temielderpeople.R;
+import il.meuhedet.temielderpeople.utils.ReminderBroadcastReceiver;
 
 public class MedicationListActivity extends AppCompatActivity {
 
@@ -65,9 +72,29 @@ public class MedicationListActivity extends AppCompatActivity {
         builder.setNegativeButton("לא", (dialog, which) -> {
             Toast.makeText(this, "אני אזכיר לך שוב בעוד חצי שעה לקחת " +
                     medication + ".", Toast.LENGTH_LONG).show();
+            setReminderAlarm(this, medication);
 //            robot.speak(TtsRequest.create("אני אזכיר לך שוב בעוד חצי שעה לקחת " + medication + "."));
         });
 
         builder.create().show();
+    }
+
+    public void setReminderAlarm(Context context, String medication) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, ReminderBroadcastReceiver.class);
+        intent.putExtra("TITLE", "remind_drug");
+        intent.putExtra("MEDICATION", medication);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, 1);
+        long alarmTime = calendar.getTimeInMillis();
+
+        Log.i("AlarmSet", "Setting alarm for ID: " + 0 + " at "
+                + calendar.getTime());
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmTime, pendingIntent);
     }
 }

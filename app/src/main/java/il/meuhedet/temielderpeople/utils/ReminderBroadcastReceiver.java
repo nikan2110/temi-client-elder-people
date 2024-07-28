@@ -20,7 +20,7 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
 
     Context context = null;
     String userName = "";
-    TtsManager ttsManager = TtsManager.getInstance(context);
+//    TtsManager ttsManager = TtsManager.getInstance(context);
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -35,6 +35,7 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
             Log.i("titleActivity", "start physical activity");
             Toast.makeText(context, "בוקר טוב, נתחיל את הבוקר בכיף עם פעילות גופנית",
                     Toast.LENGTH_LONG).show();
+
 //            ttsManager.speak(TtsRequest.create("בוקר טוב, נתחיל את הבוקר בכיף עם פעילות גופנית",
 //                            true),
 //                    false);
@@ -44,6 +45,7 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
             Log.i("titleActivity", "start news activity");
             Toast.makeText(context, "עכשיו הגיע הזמן לקצת חדשות",
                     Toast.LENGTH_LONG).show();
+
 //            ttsManager.speak(TtsRequest.create("עכשיו הגיע הזמן לקצת חדשות",
 //                            true),
 //                    false);
@@ -54,6 +56,7 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
             Toast.makeText(context, "בוקר טוב, " + userName +  "." +
                             " ארוחת הבוקר שלך מחכה לך, בתאבון. לא לשכוח לשתות לפחות כוס מים אחת",
                     Toast.LENGTH_LONG).show();
+
 //            ttsManager.speak(TtsRequest.create("בוקר טוב, " + userName +  "." +
 //                    " ארוחת הבוקר שלך מחכה לך, בתאבון. לא לשכוח לשתות לפחות כוס מים אחת",
 //                            true),
@@ -72,9 +75,16 @@ public class ReminderBroadcastReceiver extends BroadcastReceiver {
             Toast.makeText(context, "הנה תזכורת שיש אצלי, היום יש יום" +
                     " הולדת לנכדה, בוא נתקשר אליה",
                     Toast.LENGTH_LONG).show();
+
 //            ttsManager.speak(TtsRequest.create(", הנה תזכורת שיש אצלי, היום יש יום" +
 //                            " הולדת לנכדה, בוא נתקשר אליה"),
 //                    false);
         }
+        if (title.equals("remind_drug")) {
+            String medication = intent.getStringExtra("MEDICATION");
+            Log.i("ReminderMedication", "Reminder for medication: " + medication);
+            Toast.makeText(context, "אני אזכיר לך שוב לקחת את ה" + medication, Toast.LENGTH_LONG).show();
+        }
+
     }
 }
