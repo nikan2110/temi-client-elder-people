@@ -20,6 +20,7 @@ public class LoginActivityOrRegister extends AppCompatActivity {
 
         Button buttonRegister = findViewById(R.id.buttonRegister);
         Button buttonLogin = findViewById(R.id.buttonLogin);
+        Button buttonStreaming = findViewById(R.id.buttonStreaming);
 
         buttonRegister.setOnClickListener(v -> {
             Intent registerIntent = new Intent(this, RegisterActivity.class);
@@ -29,6 +30,11 @@ public class LoginActivityOrRegister extends AppCompatActivity {
         buttonLogin.setOnClickListener(v -> {
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivity(loginIntent);
+        });
+
+        buttonStreaming.setOnClickListener(v -> {
+           Intent streamingIntent = new Intent(this, StreamingActivity.class);
+           startActivity(streamingIntent);
         });
 
 

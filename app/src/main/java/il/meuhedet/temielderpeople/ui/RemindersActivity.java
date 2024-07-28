@@ -4,6 +4,8 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,53 +14,89 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+//import com.robotemi.sdk.Robot;
+//import com.robotemi.sdk.TtsRequest;
+//import com.robotemi.sdk.constants.SdkConstants;
+//import com.robotemi.sdk.listeners.OnRobotReadyListener;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import il.meuhedet.temielderpeople.R;
 import il.meuhedet.temielderpeople.api.controllers.ActivityController;
+import il.meuhedet.temielderpeople.api.controllers.ChatGPTController;
 import il.meuhedet.temielderpeople.api.dto.ActivityDTO;
+import il.meuhedet.temielderpeople.api.dto.ChatGPTAnswerDTO;
+import il.meuhedet.temielderpeople.api.retrofit.RetrofitClientChatGPTServer;
 import il.meuhedet.temielderpeople.api.retrofit.RetrofitClientTemiServer;
 import il.meuhedet.temielderpeople.utils.ReminderBroadcastReceiver;
 import il.meuhedet.temielderpeople.utils.SharedPreferencesManager;
+//import il.meuhedet.temielderpeople.utils.TtsManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class RemindersActivity extends AppCompatActivity {
+//        implements OnRobotReadyListener,
+//        Robot.AsrListener,
+//        Robot.WakeupWordListener {
 
     private LinearLayout activitiesContainer;
-    Retrofit retrofit = RetrofitClientTemiServer.getClient();
-    ActivityController activityController = retrofit.create(ActivityController.class);
+    Retrofit retrofitTemiServer = RetrofitClientTemiServer.getClient();
+    Retrofit retrofitChatGPT = RetrofitClientChatGPTServer.getClient();
+    ActivityController activityController = retrofitTemiServer.create(ActivityController.class);
+    ChatGPTController chatGPTController = retrofitChatGPT.create(ChatGPTController.class);
     SharedPreferencesManager sharedPreferencesManager;
+//    private TtsManager ttsManager;
+//    private Robot robot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminders);
 
+//        ttsManager = TtsManager.getInstance(this);
+//
+//        robot = Robot.getInstance();
+
         sharedPreferencesManager = new SharedPreferencesManager(this);
 
         activitiesContainer = findViewById(R.id.activitiesContainer);
 
         Button buttonAddActivity = findViewById(R.id.buttonAddActivity);
-        Button buttonBackToLogin = findViewById(R.id.buttonBackToLogin);
+//        Button buttonBackToLogin = findViewById(R.id.buttonBackToLogin);
+        Button buttonTemiInteraction = findViewById(R.id.buttonTemiInteraction);
 
         buttonAddActivity.setOnClickListener(v -> {
             startActivity(new Intent(RemindersActivity.this, AddActivityActivity.class));
         });
 
-        buttonBackToLogin.setOnClickListener(v -> {
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Очищаем стек активностей
-            startActivity(intent);
+//        buttonBackToLogin.setOnClickListener(v -> {
+//            Intent intent = new Intent(this, LoginActivity.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Очищаем стек активностей
+//            startActivity(intent);
+//        });
+
+        buttonTemiInteraction.setOnClickListener(v -> {
+            Toast.makeText(this, "Start GPT mode. Ask your question.",
+                    Toast.LENGTH_LONG).show();
+
+//            ttsManager.speak(TtsRequest.create("Start GPT mode. Ask your question."),
+//                    true);
+
         });
+
+
 
         String userId = sharedPreferencesManager.getUserId();
         loadActivities(userId);
@@ -129,9 +167,11 @@ public class RemindersActivity extends AppCompatActivity {
             }
 
             Log.i("AlarmSet", "Setting alarm for ID: "
-                    + activity.getId().intValue() * 100 + day.getValue() + " at " + calendar.getTime());
+                    + activity.getId().intValue() * 100 + day.getValue() + " at "
+                    + calendar.getTime());
 
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
+                    calendar.getTimeInMillis(), pendingIntent);
         }
     }
 
@@ -151,7 +191,8 @@ public class RemindersActivity extends AppCompatActivity {
 
     private void displayActivities(List<ActivityDTO> activities) {
         for (ActivityDTO activity : activities) {
-            View activityView = LayoutInflater.from(this).inflate(R.layout.activity_item, activitiesContainer, false);
+            View activityView = LayoutInflater.from(this).inflate(R.layout.activity_item,
+                    activitiesContainer, false);
             populateActivityView(activityView, activity);
             activitiesContainer.addView(activityView);
         }
@@ -160,7 +201,91 @@ public class RemindersActivity extends AppCompatActivity {
     private void populateActivityView(View view, ActivityDTO activity) {
         ((TextView) view.findViewById(R.id.textViewTitle)).setText(activity.getTitle());
         ((TextView) view.findViewById(R.id.textViewDescription)).setText(activity.getDescription());
-        ((TextView) view.findViewById(R.id.textViewTime)).setText(activity.getTime().toString());
+        ((TextView) view.findViewById(R.id.textViewTime)).setText(activity.getTime());
         ((TextView) view.findViewById(R.id.textViewDays)).setText(activity.getDays().toString());
     }
+
+//    @Override
+//    public void onAsrResult(@NonNull String asrResult) {
+//        Log.i("asrResult", asrResult);
+//        try {
+//            ApplicationInfo metadata = getPackageManager().getApplicationInfo(getPackageName(),
+//                    PackageManager.GET_META_DATA);
+//            if (metadata.metaData == null) {
+//                return;
+//            }
+//            if (!robot.isSelectedKioskApp()) {
+//                robot.requestToBeKioskApp();
+//            }
+//            if (!metadata.metaData.getBoolean(SdkConstants.METADATA_OVERRIDE_NLU)) {
+//                return;
+//            }
+//        } catch (PackageManager.NameNotFoundException e) {
+//            e.printStackTrace();
+//            return;
+//        }
+//        if (!asrResult.isEmpty()) {
+//            HashMap<String, String> body = new HashMap<>();
+//            body.put("question", asrResult);
+//            sendQuestion(body);
+//        }
+//    }
+
+//    @Override
+//    public void onRobotReady(boolean isReady) {
+//        if (isReady) {
+//            try {
+//
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//    }
+
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        robot.addOnRobotReadyListener(this);
+//        robot.addAsrListener(this);
+//        robot.addWakeupWordListener(this);
+//    }
+//
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        robot.removeOnRobotReadyListener(this);
+//        robot.removeAsrListener(this);
+//        robot.removeWakeupWordListener(this);
+//    }
+
+
+    private void sendQuestion(Map<String, String> body) {
+        chatGPTController.askQuestion(body).enqueue(new Callback<ChatGPTAnswerDTO>() {
+
+            @Override
+            public void onResponse(Call<ChatGPTAnswerDTO> call, Response<ChatGPTAnswerDTO> response) {
+                ChatGPTAnswerDTO chatGPTAnswerModel = response.body();
+                if (chatGPTAnswerModel != null && !chatGPTAnswerModel.getResponse().isEmpty()) {
+                    String chatGPTAnswerModelText = chatGPTAnswerModel.getResponse();
+
+                    Toast.makeText(RemindersActivity.this,
+                            chatGPTAnswerModelText, Toast.LENGTH_LONG).show();
+
+//                    ttsManager.speak(TtsRequest.create(chatGPTAnswerModelText,
+//                            true), true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ChatGPTAnswerDTO> call, Throwable t) {
+                Toast.makeText(RemindersActivity.this,
+                        "Something wrong with server", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+//    @Override
+//    public void onWakeupWord(@NonNull String s, int i) {
+//        ttsManager.speak(TtsRequest.create(""), true);
+//    }
 }
